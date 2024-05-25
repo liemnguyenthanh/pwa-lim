@@ -1,8 +1,7 @@
 {
     "theme_color": "#9013fe",
     "background_color": "#dca977",
-    "display": "browser",
-    "scope": "/",
+    "display": "standalone",
     "start_url": "/",
     "name": "limlim",
     "short_name": "limm",
