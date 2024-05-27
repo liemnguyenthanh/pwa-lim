@@ -12,7 +12,7 @@ export const privyConfig: PrivyClientConfig = {
     requireUserPasswordOnCreate: true,
     noPromptOnSignature: false,
   },
-  loginMethods: ["wallet", "email", "google", "twitter", "discord", "github"],
+  loginMethods: ["wallet", "email", "google", "twitter", "discord", "github", "tiktok"],
 };
 
 export const PRIVY_APP_ID = "clw52n8mi0emlvv5hqi1thyrw";
