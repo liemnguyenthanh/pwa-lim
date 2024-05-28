@@ -1,21 +1,27 @@
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { usePrivy } from "@privy-io/react-auth";
-import { Button, Spinner } from "flowbite-react";
 import React from "react";
 
 export const UserInfo = () => {
   const { ready, user, linkTwitter, linkGoogle, linkTiktok } = usePrivy();
 
   if (!ready || !user) {
-    return <Spinner />;
+    return <CircularProgress size={40} />;
   }
 
   return (
     <div className="flex flex-col gap-2">
       <div>
-        <p className="mb-5 text-xl">
-          User <b>{user.id}</b> has linked the following accounts:
-        </p>
-        <ul className="flex flex-col gap-2">
+        <Typography color="white" mb={2}>
+          User ID <b>{user.id}</b>
+        </Typography>
+        <Stack gap={2} color="white">
           <SocialCard
             title="Google"
             info={
@@ -58,8 +64,14 @@ export const UserInfo = () => {
             titleBtn="Connect Tiktok"
           />
 
-          <li>Wallet: {user.wallet ? user.wallet.address : "None"}</li>
-        </ul>
+          <Typography
+            color="white"
+            whiteSpace="pre-wrap"
+            sx={{ wordBreak: "break-all" }}
+          >
+            Wallet: {user.wallet ? user.wallet.address : "None"}
+          </Typography>
+        </Stack>
       </div>
     </div>
   );
@@ -81,19 +93,33 @@ export const SocialCard = ({
   onClick,
 }: SocialCardProps) => {
   if (!info) {
-    return <Button onClick={onClick}>{titleBtn}</Button>;
+    return (
+      <Button variant="outlined" color="inherit" onClick={onClick}>
+        {titleBtn}
+      </Button>
+    );
   }
   return (
-    <div className="flex flex-col justify-between p-4 leading-normal border rounded-lg">
-      <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+    <Box
+      border={1}
+      borderColor="#ccc"
+      borderRadius={1}
+      p={2}
+      display="flex"
+      flexDirection={{ xs: "column", md: "row" }}
+      gap={2}
+    >
+      <Typography color="white" fontSize={20}>
         {title}
-      </h5>
-      <p className="mt-3 font-normal text-gray-700 dark:text-gray-400">
-        {info.title}
-      </p>
-      <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-        {info.des}
-      </p>
-    </div>
+      </Typography>
+      <Stack gap={1}>
+        <Typography color="white" fontSize={16}>
+          {info.title}
+        </Typography>
+        <Typography color="white" fontSize={14}>
+          {info.des}
+        </Typography>
+      </Stack>
+    </Box>
   );
 };

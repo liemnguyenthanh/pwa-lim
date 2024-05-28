@@ -1,17 +1,19 @@
-import React, { PropsWithChildren, useEffect } from "react";
-import { CustomSidebar } from "../components";
-import { useThemeMode } from "flowbite-react";
+import { PropsWithChildren } from "react";
+import { AppBar, CustomSidebar } from "../components";
+import { Box, Stack } from "@mui/material";
 
 export const MainLayout = ({ children }: PropsWithChildren) => {
-  const { setMode } = useThemeMode();
-  useEffect(() => {
-    setMode("dark");
-  }, []);
-
   return (
-    <div className="h-screen flex">
+    <Stack
+      flexDirection={{ md: "row" }}
+      height={{ md: "100dvh" }}
+      pb={{ xs: 10, md: 2 }}
+    >
       <CustomSidebar />
-      <div className="flex-1">{children}</div>
-    </div>
+      <Box flex={1} bgcolor={"#1c1c1c"}>
+        {children}
+      </Box>
+      <AppBar />
+    </Stack>
   );
 };

@@ -1,19 +1,23 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { Logout } from "./Logout";
 
-export const CustomSidebar = () => {
+export const AppBar = () => {
   return (
     <Stack
-      display={{ xs: "none", md: "flex" }}
-      width={300}
+      display={{ xs: "flex", md: "none" }}
+      position='fixed'
+      bottom={0}
+      width='100vw'
+      height={80}
       bgcolor="#000"
-      borderRight={1}
+      borderTop={1}
       borderColor="#909090"
       p={2}
+      flexDirection='row'
+      alignItems='center'
       justifyContent="space-between"
     >
       <Typography
-        mt={3}
         textAlign="center"
         color="white"
         fontSize={24}

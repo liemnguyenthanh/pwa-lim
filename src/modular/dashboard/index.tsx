@@ -1,10 +1,21 @@
-import { Actions, UserInfo } from "./components";
+import { Box, Grid } from "@mui/material";
+import { Actions, ReadAndWriteSm, UserInfo } from "./components";
 
 export const DashboardModular = () => {
   return (
-    <div className="flex items-center justify-center h-screen p-5 gap-2">
-      <Actions />
-      <UserInfo />
-    </div>
+    <Box p={2}>
+      <Grid container spacing={{ xs: 2, md: 4 }}>
+        <Grid item xs={12} md={4}>
+          <Actions />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <UserInfo />
+        </Grid>
+
+        <Grid item xs={12}>
+          <ReadAndWriteSm />
+        </Grid>
+      </Grid>
+    </Box>
   );
 };

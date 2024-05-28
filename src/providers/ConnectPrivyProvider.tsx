@@ -2,15 +2,16 @@ import React, { PropsWithChildren } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { PRIVY_APP_ID, privyConfig } from "@/config";
-import { mainnet, sepolia } from "viem/chains";
+import { mainnet, sepolia, berachainTestnet } from "viem/chains";
 import { http } from "wagmi";
 import { WagmiProvider, createConfig } from "@privy-io/wagmi";
 
 export const config = createConfig({
-  chains: [mainnet, sepolia], 
+  chains: [mainnet, sepolia, berachainTestnet],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
+    [berachainTestnet.id]: http(),
   },
 });
 const queryClient = new QueryClient();
