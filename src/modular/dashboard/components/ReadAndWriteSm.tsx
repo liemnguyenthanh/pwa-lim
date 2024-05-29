@@ -9,16 +9,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import {
-  UnsignedTransactionRequest,
-  usePrivy,
-  useWallets,
-} from "@privy-io/react-auth";
-import { ethers } from "ethers";
-import React, { useState } from "react";
-import { encodeFunctionData } from "viem";
-import { writeContract } from "viem/actions";
-import { useContractRead, useReadContract } from "wagmi";
+import { useWallets } from "@privy-io/react-auth";
+import { useState } from "react";
+import { createWalletClient, custom, encodeFunctionData } from "viem";
+import { useReadContract } from "wagmi";
 
 const passContractAddress = "0x80Ea3AC4ee5C563D1A292E0f6C8a6096Ee5BA231";
 const defaultAddress = "0x2569eD22A926971FF4ba299365AA9ece3EF23376";
@@ -29,7 +23,7 @@ export const ReadAndWriteSm = () => {
     data: buyPrice,
     isLoading: isBuyPriceLoading,
     error: errorBuyPrice,
-  } = useContractRead({
+  } = useReadContract({
     address: passContractAddress,
     abi: PassABI,
     functionName: "getBuyPriceAfterFee",
@@ -102,7 +96,11 @@ export const ReadAndWriteSm = () => {
 };
 
 export const BuyTheFirstPass = () => {
-  const { sendTransaction } = usePrivy();
+  const { wallets } = useWallets();
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType === "privy"
+  );
+
   const handleBuyPass = async () => {
     const managerAddress = "0x2569eD22A926971FF4ba299365AA9ece3EF23376";
     const priceCurve = 120;
@@ -118,14 +116,53 @@ export const BuyTheFirstPass = () => {
       functionName: "buyPasses",
       args: [managerAddress, BigInt(1), BigInt(priceCurve)],
     });
+    // try {
+    //   sendTransaction({
+    //     to: passContractAddress,
+    //     chainId: chains.testnet.id,
+    //     value: BigInt(0),
+    //     data,
+    //   });
+    // } catch (error) {}
+
+    if (!embeddedWallet) return;
     try {
-      sendTransaction({
-        to: passContractAddress,
+      // Switch network to Base Goerli
+      console.log("embeddedWallet", embeddedWallet);
+
+      await embeddedWallet.switchChain(chains.testnet.id);
+      // Get an EIP1193 provider from the embedded wallet
+      const provider = await embeddedWallet.getEthereumProvider();
+      // From the EIP1193 provider, create a viem wallet client
+      const walletClient = createWalletClient({
+        account: embeddedWallet.address as `0x${string}`,
+        chain: chains.testnet,
+        transport: custom(provider),
+      });
+
+      // Send transaction using the viem wallet client. Alternatively, you
+      // may use Privy's `sendTransaction` method. This is just an example
+      // of the many ways to send a transaction from the wallet.
+      console.log("data", {
+        account: embeddedWallet.address as `0x${string}`,
+        to: passContractAddress as `0x${string}`,
         chainId: chains.testnet.id,
         value: BigInt(0),
         data,
       });
-    } catch (error) {}
+
+      const _txHash = await walletClient.sendTransaction({
+        account: embeddedWallet.address as `0x${string}`,
+        to: passContractAddress as `0x${string}`,
+        chainId: chains.testnet.id,
+        value: BigInt(0),
+        data,
+      });
+
+      console.log(_txHash);
+    } catch (e) {
+      console.error("Transfer failed with error ", e);
+    }
   };
 
   return (

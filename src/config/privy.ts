@@ -1,3 +1,4 @@
+import { mainnet, sepolia, berachainTestnet } from "viem/chains";
 import { PrivyClientConfig } from "@privy-io/react-auth";
 
 export const privyConfig: PrivyClientConfig = {
@@ -12,7 +13,16 @@ export const privyConfig: PrivyClientConfig = {
     requireUserPasswordOnCreate: true,
     noPromptOnSignature: false,
   },
-  loginMethods: ["wallet", "email", "google", "twitter", "discord", "github", "tiktok"],
+  loginMethods: [
+    "wallet",
+    "email",
+    "google",
+    "twitter",
+    "discord",
+    "github",
+    "tiktok",
+  ],
+  supportedChains: [mainnet, sepolia, berachainTestnet],
 };
 
 export const PRIVY_APP_ID = "clw52n8mi0emlvv5hqi1thyrw";

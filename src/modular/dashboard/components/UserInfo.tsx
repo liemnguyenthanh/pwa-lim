@@ -9,11 +9,13 @@ import { usePrivy } from "@privy-io/react-auth";
 import React from "react";
 
 export const UserInfo = () => {
-  const { ready, user, linkTwitter, linkGoogle, linkTiktok } = usePrivy();
+  const { ready, user, linkTwitter, linkGoogle, linkTiktok, linkGithub } =
+    usePrivy();
 
   if (!ready || !user) {
     return <CircularProgress size={40} />;
   }
+  console.log("user", user);
 
   return (
     <div className="flex flex-col gap-2">
@@ -62,6 +64,20 @@ export const UserInfo = () => {
             }
             onClick={linkTiktok}
             titleBtn="Connect Tiktok"
+          />
+
+          <SocialCard
+            title="Github"
+            info={
+              user.github
+                ? {
+                    title: user.github.subject ?? "",
+                    des: user.github.username ?? "",
+                  }
+                : null
+            }
+            onClick={linkGithub}
+            titleBtn="Connect Github"
           />
 
           <Typography
