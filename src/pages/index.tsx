@@ -16,39 +16,17 @@ const mobileQuery = "(max-width: 900px)";
 export default function Home() {
   const router = useRouter();
   const { login, ready, authenticated } = usePrivy();
-  const { config, setConfig } = useContext(PrivyConfigContext);
-  const [copied, setCopied] = useState(false);
-  const storedConfigRaw =
-    typeof window === "undefined"
-      ? null
-      : window.localStorage.getItem(PRIVY_STORAGE_KEY);
-  const storedConfig = storedConfigRaw ? JSON.parse(storedConfigRaw) : null;
-  const [readyToSetTheme, setReadyToSetTheme] = useState(false);
 
   const { isMobile } = useMediaQuery();
+
   useEffect(() => {
     if (!ready || authenticated) {
       return;
     }
-    setConfig?.({
-      ...config,
-      appearance: storedConfig?.appearance
-        ? storedConfig.appearance
-        : defaultIndexConfig.appearance,
-
-      embeddedWallets: {
-        ...defaultIndexConfig.embeddedWallets,
-        requireUserPasswordOnCreate:
-          storedConfig?.embeddedWallets?.requireUserPasswordOnCreate ??
-          defaultIndexConfig.embeddedWallets!.requireUserPasswordOnCreate,
-      },
-    });
     // ensure that the modal is open on desktop
     if (!isMobile) {
       login();
     }
-    setReadyToSetTheme(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, ready, authenticated]);
 
   useEffect(() => {
@@ -64,24 +42,11 @@ export default function Home() {
     // before that issue arises.
     const currentUrl = new URL(window.location.href);
 
-    const oauthProvider = currentUrl.searchParams.get("privy_oauth_provider");
-    setConfig?.({
-      ...(oauthProvider ? defaultDashboardConfig : defaultIndexConfig),
-      appearance: storedConfig?.appearance
-        ? storedConfig.appearance
-        : defaultIndexConfig.appearance,
-      embeddedWallets: {
-        ...defaultIndexConfig.embeddedWallets,
-        requireUserPasswordOnCreate:
-          storedConfig?.embeddedWallets?.requireUserPasswordOnCreate ??
-          defaultIndexConfig.embeddedWallets!.requireUserPasswordOnCreate,
-      },
-    });
+ 
 
     if (!isMobileOnLoad) {
       login();
     }
-    setReadyToSetTheme(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, authenticated]);
 
