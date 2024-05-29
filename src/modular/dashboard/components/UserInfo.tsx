@@ -5,13 +5,17 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useLinkAccount, usePrivy } from "@privy-io/react-auth";
-import React from "react";
+import {
+  WalletWithMetadata,
+  useLinkAccount,
+  usePrivy,
+  useWallets,
+} from "@privy-io/react-auth";
+import React, { use } from "react";
 
 export const UserInfo = () => {
-  const { ready, user } = usePrivy();
-
-  const { linkTwitter, linkGoogle, linkTiktok, linkGithub } = useLinkAccount({
+  const { ready, user, unlinkTwitter, unlinkGithub } = usePrivy();
+  const { linkTwitter, linkGoogle, linkGithub } = useLinkAccount({
     onSuccess: (user, linkMethod, linkedAccount) => {
       console.log({ user, linkMethod, linkedAccount });
     },
@@ -42,7 +46,7 @@ export const UserInfo = () => {
                   }
                 : null
             }
-            onClick={linkGoogle}
+            linkAction={linkGoogle}
             titleBtn="Connect Google"
           />
 
@@ -56,24 +60,12 @@ export const UserInfo = () => {
                   }
                 : null
             }
-            onClick={linkTwitter}
+            linkAction={linkTwitter}
+            unlinkAction={() => {
+              unlinkTwitter(user.twitter?.subject as string);
+            }}
             titleBtn="Connect Twitter"
           />
-
-          <SocialCard
-            title="Tiktok"
-            info={
-              user.tiktok
-                ? {
-                    title: user.tiktok.subject ?? "",
-                    des: user.tiktok.username ?? "",
-                  }
-                : null
-            }
-            onClick={linkTiktok}
-            titleBtn="Connect Tiktok"
-          />
-
           <SocialCard
             title="Github"
             info={
@@ -84,7 +76,10 @@ export const UserInfo = () => {
                   }
                 : null
             }
-            onClick={linkGithub}
+            linkAction={linkGithub}
+            unlinkAction={() => {
+              unlinkGithub(user.github?.subject as string);
+            }}
             titleBtn="Connect Github"
           />
 
@@ -106,7 +101,8 @@ type SocialCardProps = {
     title: string;
     des: string;
   };
-  onClick?: () => void;
+  linkAction?: () => void;
+  unlinkAction?: () => void;
   titleBtn: string;
 };
 
@@ -114,11 +110,12 @@ export const SocialCard = ({
   title,
   info,
   titleBtn,
-  onClick,
+  linkAction,
+  unlinkAction,
 }: SocialCardProps) => {
   if (!info) {
     return (
-      <Button variant="outlined" color="inherit" onClick={onClick}>
+      <Button variant="outlined" color="inherit" onClick={linkAction}>
         {titleBtn}
       </Button>
     );
@@ -144,6 +141,11 @@ export const SocialCard = ({
           {info.des}
         </Typography>
       </Stack>
+      {unlinkAction && (
+        <Button variant="outlined" color="inherit" onClick={unlinkAction}>
+          unlink
+        </Button>
+      )}
     </Box>
   );
 };
