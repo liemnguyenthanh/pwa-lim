@@ -5,12 +5,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { usePrivy } from "@privy-io/react-auth";
+import { useLinkAccount, usePrivy } from "@privy-io/react-auth";
 import React from "react";
 
 export const UserInfo = () => {
-  const { ready, user, linkTwitter, linkGoogle, linkTiktok, linkGithub } =
-    usePrivy();
+  const { ready, user } = usePrivy();
+
+  const { linkTwitter, linkGoogle, linkTiktok, linkGithub } = useLinkAccount({
+    onSuccess: (user, linkMethod, linkedAccount) => {
+      console.log({ user, linkMethod, linkedAccount });
+    },
+    onError: (error) => {
+      console.log({ error });
+    },
+  });
 
   if (!ready || !user) {
     return <CircularProgress size={40} />;

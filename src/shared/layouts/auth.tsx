@@ -1,9 +1,13 @@
+import { Box, Typography } from "@mui/material";
 import { PropsWithChildren } from "react";
 
 export const AuthLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div>
+    <Box bgcolor='text.primary'>
+      <Typography color='text.primary'>
+        Text 
+      </Typography>
       {children}
-    </div>
+    </Box>
   );
 };

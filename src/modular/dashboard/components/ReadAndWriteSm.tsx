@@ -30,7 +30,6 @@ export const ReadAndWriteSm = () => {
     args: [managerAddress, Number.isInteger(1) ? BigInt(1) : BigInt(1)],
   });
 
-  console.log({ errorBuyPrice, isBuyPriceLoading, buyPrice });
 
   const { data: dataFactor, isLoading } = useReadContract({
     address: passContractAddress,
@@ -42,7 +41,6 @@ export const ReadAndWriteSm = () => {
       enabled: !!managerAddress,
     },
   });
-  console.log({ dataFactor, isLoading });
 
   return (
     <Stack gap={2}>
@@ -128,7 +126,6 @@ export const BuyTheFirstPass = () => {
     if (!embeddedWallet) return;
     try {
       // Switch network to Base Goerli
-      console.log("embeddedWallet", embeddedWallet);
 
       await embeddedWallet.switchChain(chains.testnet.id);
       // Get an EIP1193 provider from the embedded wallet
@@ -143,13 +140,6 @@ export const BuyTheFirstPass = () => {
       // Send transaction using the viem wallet client. Alternatively, you
       // may use Privy's `sendTransaction` method. This is just an example
       // of the many ways to send a transaction from the wallet.
-      console.log("data", {
-        account: embeddedWallet.address as `0x${string}`,
-        to: passContractAddress as `0x${string}`,
-        chainId: chains.testnet.id,
-        value: BigInt(0),
-        data,
-      });
 
       const _txHash = await walletClient.sendTransaction({
         account: embeddedWallet.address as `0x${string}`,
@@ -159,7 +149,6 @@ export const BuyTheFirstPass = () => {
         data,
       });
 
-      console.log(_txHash);
     } catch (e) {
       console.error("Transfer failed with error ", e);
     }

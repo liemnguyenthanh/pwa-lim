@@ -9,9 +9,8 @@ export const privyConfig: PrivyClientConfig = {
     logo: "https://i.ibb.co/7t8DL1k/Screenshot-2024-05-25-at-3-01-25-PM.png",
   },
   embeddedWallets: {
-    createOnLogin: "users-without-wallets",
-    requireUserPasswordOnCreate: true,
-    noPromptOnSignature: false,
+    createOnLogin: 'users-without-wallets',
+    requireUserPasswordOnCreate: false,
   },
   loginMethods: [
     "wallet",
