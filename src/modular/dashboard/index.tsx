@@ -2,12 +2,25 @@ import { Box, Grid } from "@mui/material";
 import { Actions, ReadAndWriteSm, UserInfo } from "./components";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
-import { PRIVY_STORAGE_KEY, PrivyConfigContext, defaultDashboardConfig, defaultIndexConfig } from "@/shared/hooks";
+import {
+  PRIVY_STORAGE_KEY,
+  PrivyConfigContext,
+  defaultDashboardConfig,
+  defaultIndexConfig,
+} from "@/shared/hooks";
+import { usePrivy } from "@privy-io/react-auth";
 
 export const DashboardModular = () => {
   const router = useRouter();
-  const {setConfig} = useContext(PrivyConfigContext);
+  const { setConfig } = useContext(PrivyConfigContext);
+  const { ready,authenticated } = usePrivy();
 
+  useEffect(() => {
+   if (ready && !authenticated) {
+    router.push('/login')
+   }
+  }, [authenticated])
+  
   // set initial config, first checking for stored config, then falling back to default
   useEffect(() => {
     const storedConfigRaw = window.localStorage.getItem(PRIVY_STORAGE_KEY);
@@ -26,7 +39,7 @@ export const DashboardModular = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <Box p={2}>
       <Grid container spacing={{ xs: 2, md: 4 }}>
