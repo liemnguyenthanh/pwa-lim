@@ -13,7 +13,7 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
       <Box flex={1} bgcolor={"#1c1c1c"}>
         {children}
       </Box>
-      <AppBar />
+      {/* <AppBar /> */}
     </Stack>
   );
 };

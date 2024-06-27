@@ -9,6 +9,7 @@ export const AppBar = () => {
       bottom={0}
       width='100vw'
       height={80}
+      zIndex={10}
       bgcolor="#000"
       borderTop={1}
       borderColor="#909090"
