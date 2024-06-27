@@ -5,13 +5,7 @@ import { useWallets } from "@privy-io/react-auth";
 import React, { useState } from "react";
 import { createWalletClient, custom, encodeFunctionData } from "viem";
 
-export const TestModal = () => {
-  const [open, setOpen] = useState(false);
-
-  const toggleModal = () => {
-    setOpen((pre) => !pre);
-  };
-
+export const BuyBtn = () => {
   const passContractAddress = "0x80Ea3AC4ee5C563D1A292E0f6C8a6096Ee5BA231";
   const defaultAddress = "0x2569eD22A926971FF4ba299365AA9ece3EF23376";
   const { wallets } = useWallets();
@@ -74,6 +68,20 @@ export const TestModal = () => {
   };
 
   return (
+    <Button variant="contained" onClick={handleBuyPass}>
+      Open Modal
+    </Button>
+  );
+};
+
+export const TestModal = () => {
+  const [open, setOpen] = useState(false);
+
+  const toggleModal = () => {
+    setOpen((pre) => !pre);
+  };
+
+  return (
     <>
       <Button variant="contained" onClick={toggleModal}>
         Open Modal
@@ -91,9 +99,7 @@ export const TestModal = () => {
           bgcolor="blue"
         >
           <Typography>Huy the b</Typography>
-          <Button variant="contained" onClick={handleBuyPass}>
-            Open Modal
-          </Button>
+          <BuyBtn />
         </Stack>
       </SwipeableDrawer>
     </>

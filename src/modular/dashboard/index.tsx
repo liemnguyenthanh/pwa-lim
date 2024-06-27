@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 
 import { usePrivy } from "@privy-io/react-auth";
-import { TestModal } from "./components/TestModal";
+import { BuyBtn, TestModal } from "./components/TestModal";
 
 export const DashboardModular = () => {
   const router = useRouter();
@@ -26,6 +26,7 @@ export const DashboardModular = () => {
           <UserInfo />
         </Grid>
         <TestModal />
+        <BuyBtn />
         {/* 
         <Grid item xs={12}>
           <ReadAndWriteSm />
