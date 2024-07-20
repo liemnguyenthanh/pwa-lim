@@ -2,16 +2,36 @@ import React, { PropsWithChildren } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { PRIVY_APP_ID, privyConfig } from "@/config";
-import { mainnet, sepolia, berachainTestnet } from "viem/chains";
 import { http } from "wagmi";
 import { WagmiProvider, createConfig } from "@privy-io/wagmi";
+import { defineChain } from "viem";
+
+const bArtioChain = defineChain({
+  id: 80084,
+  name: "Berachain bArtio",
+  network: "Berachain bArtio",
+  nativeCurrency: {
+    decimals: 18,
+    name: "BERA Token",
+    symbol: "BERA",
+  },
+  rpcUrls: {
+    default: { http: ["https://bartio.rpc.berachain.com"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Beratrail",
+      url: "https://bartio.beratrail.io",
+    },
+  },
+  testnet: true,
+});
+export default bArtioChain;
 
 export const config = createConfig({
-  chains: [mainnet, sepolia, berachainTestnet],
+  chains: [bArtioChain],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [berachainTestnet.id]: http(),
+    [bArtioChain.id]: http(),
   },
 });
 const queryClient = new QueryClient();
