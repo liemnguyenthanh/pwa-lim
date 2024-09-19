@@ -23,22 +23,27 @@ export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
   return useMemo(() => (client ? clientToSigner(client) : undefined), [client]);
 }
 
+type SmartAccount = BiconomySmartAccountV2 | null;
+
 export function useBiconomyAccount() {
   const client = useEthersSigner({ chainId: 80084 });
+  const [smartAccount, setSmartAccount] = useState<SmartAccount>(null);
 
-  const [smartAccount, setSmartAccount] =
-    useState<BiconomySmartAccountV2 | null>(null);
   useEffect(() => {
     const createAndSetSmartAccount = async () => {
-      if (!client) return null;
       try {
-        if (client) {
-          const newSmartAccount = await createSmartAccount(client);
-          setSmartAccount(newSmartAccount ?? null);
-          return;
+        if (!client) return null;
+
+        const newSmartAccount = await createSmartAccount(client);
+        const isAccountDeployed = await newSmartAccount.isAccountDeployed();
+        setSmartAccount(newSmartAccount);
+        if (!isAccountDeployed) {
+          const accDeploy = await newSmartAccount.deploy();
+          console.log({ accDeploy });
         }
+        return;
       } catch (error) {
-        console.error("Error fetching:", error);
+        console.error("CreateAndSetSmartAccount Error::", error);
         return null;
       }
     };

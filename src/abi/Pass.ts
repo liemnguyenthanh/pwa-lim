@@ -4,6 +4,37 @@ export const PassABI = [
     inputs: [
       {
         indexed: false,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'Approval',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: 'uint8',
         name: 'version',
         type: 'uint8',
@@ -62,6 +93,19 @@ export const PassABI = [
     inputs: [
       {
         indexed: false,
+        internalType: 'uint256',
+        name: 'feePercentage',
+        type: 'uint256',
+      },
+    ],
+    name: 'ReferralFeePercentageChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: 'address',
         name: 'trader',
         type: 'address',
@@ -104,6 +148,18 @@ export const PassABI = [
       },
       {
         indexed: false,
+        internalType: 'address',
+        name: 'referral',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'referralBeraAmount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
         internalType: 'uint256',
         name: 'supply',
         type: 'uint256',
@@ -117,6 +173,121 @@ export const PassABI = [
     ],
     name: 'Trade',
     type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'receiver',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'Transfer',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'transferFee',
+        type: 'uint256',
+      },
+    ],
+    name: 'TransferFeeChanged',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'whitelisted',
+        type: 'bool',
+      },
+    ],
+    name: 'UpdateWhitelist',
+    type: 'event',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+    ],
+    name: 'allowance',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
     inputs: [
@@ -158,6 +329,11 @@ export const PassABI = [
         internalType: 'uint256',
         name: 'factor',
         type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'referral',
+        type: 'address',
       },
     ],
     name: 'buyPasses',
@@ -419,6 +595,19 @@ export const PassABI = [
   },
   {
     inputs: [],
+    name: 'referralFeePercent',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'renounceOwnership',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -440,6 +629,11 @@ export const PassABI = [
         internalType: 'uint256',
         name: 'minPrice',
         type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'referral',
+        type: 'address',
       },
     ],
     name: 'sellPasses',
@@ -494,6 +688,32 @@ export const PassABI = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: '_feePercentage',
+        type: 'uint256',
+      },
+    ],
+    name: 'setReferralFeePercentage',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_transferFee',
+        type: 'uint256',
+      },
+    ],
+    name: 'setTransferFee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: '_treasury',
         type: 'address',
@@ -502,6 +722,88 @@ export const PassABI = [
     name: 'setTreasury',
     outputs: [],
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+      {
+        internalType: 'bool',
+        name: 'whitelisted',
+        type: 'bool',
+      },
+    ],
+    name: 'toggleWhitelist',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'receiver',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'transfer',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'transferFee',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'sender',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'receiver',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'manager',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'transferFrom',
+    outputs: [],
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -525,6 +827,25 @@ export const PassABI = [
         internalType: 'address',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'whitelist',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: 'whitelisted',
+        type: 'bool',
       },
     ],
     stateMutability: 'view',
