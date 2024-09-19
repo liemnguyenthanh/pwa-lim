@@ -1,2 +1,2 @@
-export * from './ConnectPrivyProvider'
+export * from './ConnectDynamicProvider'
 export * from './AuthProvider'

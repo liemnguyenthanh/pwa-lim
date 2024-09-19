@@ -1,3 +1,4 @@
+'use client'
 import { useRouter } from "next/router";
 import React, { PropsWithChildren } from "react";
 import { AuthLayout } from "./auth";

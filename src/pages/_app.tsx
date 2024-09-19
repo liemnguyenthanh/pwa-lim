@@ -1,5 +1,5 @@
-import { AuthProvider, ConnectPrivyProvider } from "@/providers";
-import { AppLayout } from "@/shared/layouts";
+import { AuthProvider, ConnectDynamicProvider } from "@/providers";
+import { AppLayout } from "@/layouts";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
@@ -10,17 +10,16 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function App({ Component, pageProps, router }: AppProps) {
   return (
-
-      <ConnectPrivyProvider>
-        <AuthProvider>
-          <AppLayout>
-            <ThemeProvider theme={createCustomTheme('light')}>
-              <ToastContainer />
-              <CssBaseline />
-              <Component {...pageProps} />
-            </ThemeProvider>
-          </AppLayout>
-        </AuthProvider>
-      </ConnectPrivyProvider>
+    <ConnectDynamicProvider>
+      <AuthProvider>
+        <AppLayout>
+          <ThemeProvider theme={createCustomTheme("light")}>
+            <ToastContainer />
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </AppLayout>
+      </AuthProvider>
+    </ConnectDynamicProvider>
   );
 }
