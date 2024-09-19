@@ -123,9 +123,9 @@ export default function Home() {
           <Stack gap={2}>
             <Card title="Smart Address">{info.address}</Card>
             <Card title="Smart Account Balances">
-              {info.balances?.map((balance) => {
+              {info.balances?.map((balance, indx) => {
                 return (
-                  <Typography>
+                  <Typography key={indx}>
                     {" "}
                     {balance.formattedAmount} {}
                   </Typography>
