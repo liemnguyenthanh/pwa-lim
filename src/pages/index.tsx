@@ -169,7 +169,7 @@ export default function Home() {
 
 const Card = ({ title, children }: { title: string } & PropsWithChildren) => {
   return (
-    <Stack gap={2} borderRadius={2} p={2} bgcolor="ActiveBorder">
+    <Stack gap={2} borderRadius={2} p={2} bgcolor="#161616">
       <Typography fontSize={18} color="grey">
         {title}
       </Typography>
