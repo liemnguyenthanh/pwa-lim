@@ -1,27 +1,23 @@
 import { PassABI } from "@/abi";
 import { useBiconomyAccount } from "@/hooks/useBiconomyAccount";
 import { BalancePayload, PaymasterMode } from "@biconomy/account";
-import { DynamicWidget, useUserWallets } from "@dynamic-labs/sdk-react-core";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { Children, PropsWithChildren, useEffect, useState } from "react";
-import { encodeFunctionData, parseUnits } from "viem";
+import { DynamicWidget } from "@dynamic-labs/sdk-react-core";
+import { Button, CircularProgress, Stack, Typography } from "@mui/material";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { encodeFunctionData } from "viem";
 import { useReadContract } from "wagmi";
 
 const passContractAddress = "0x557De5cC9031E71246e50FE68df749217683f4A3";
 const referral = "0x0000000000000000000000000000000000000000";
 
+type Info = {
+  address: string;
+  balances: BalancePayload[];
+};
+
 export default function Home() {
   const { smartAccount } = useBiconomyAccount();
-  const [info, setInfo] = useState<{
-    address: string;
-    balances: BalancePayload[];
-  }>({
+  const [info, setInfo] = useState<Info>({
     address: "",
     balances: [],
   });
@@ -30,8 +26,6 @@ export default function Home() {
     error: "",
     txHash: "",
   });
-
-  const userWallets = useUserWallets();
 
   const amount = 1;
 
@@ -46,7 +40,7 @@ export default function Home() {
     },
   });
 
-  const { data: dataBalance } = useReadContract({
+  const { data: dataBalance, refetch: refetchPassBalance } = useReadContract({
     address: passContractAddress,
     abi: PassABI,
     chainId: 80084,
@@ -74,11 +68,21 @@ export default function Home() {
         data: encodedCall,
         value: dataPrice as bigint,
       };
-      const { waitForTxHash } = await smartAccount.sendTransaction(transaction);
-      const { transactionHash, userOperationReceipt } = await waitForTxHash();
-      console.log({ transactionHash, userOperationReceipt });
+      const shouldPaymasterService = Number(dataBalance) === 0;
+      const { waitForTxHash } = await smartAccount.sendTransaction(
+        transaction,
+        shouldPaymasterService
+          ? {
+              paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+            }
+          : undefined
+      );
+      const { transactionHash } = await waitForTxHash();
       if (transactionHash) {
         setResult({ loading: false, error: "", txHash: transactionHash });
+        setTimeout(() => {
+          refetchPassBalance();
+        }, 1000);
       }
     } catch (error) {
       console.log("Send transaction error:::", {
@@ -123,16 +127,21 @@ export default function Home() {
           <Stack gap={2}>
             <Card title="Smart Address">{info.address}</Card>
             <Card title="Smart Account Balances">
-              {info.balances?.map((balance, indx) => {
-                return (
-                  <Typography key={indx}>
-                    {" "}
-                    {balance.formattedAmount} {}
-                  </Typography>
-                );
+              {info.balances?.map((balance, index) => {
+                return <BalanceItem balance={balance} key={index} />;
               })}
             </Card>
-            <Card title="You holding Your Pass">{Number(dataBalance)}</Card>
+            <Card title="You holding Your Pass">
+              {Number(dataBalance)}
+              <Button
+                variant="contained"
+                fullWidth
+                color="warning"
+                onClick={() => refetchPassBalance()}
+              >
+                Refetch
+              </Button>
+            </Card>
           </Stack>
 
           <Stack gap={1}>
@@ -164,7 +173,22 @@ const Card = ({ title, children }: { title: string } & PropsWithChildren) => {
       <Typography fontSize={18} color="grey">
         {title}
       </Typography>
-      <Typography color="white">{children}</Typography>
+      <Stack
+        fontSize={16}
+        color="white"
+        sx={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
+        gap={2}
+      >
+        {children}
+      </Stack>
     </Stack>
+  );
+};
+
+const BalanceItem = ({ balance }: { balance: BalancePayload }) => {
+  return (
+    <Typography>
+      Balance: {balance.formattedAmount} - chainID: {balance.chainId}
+    </Typography>
   );
 };
