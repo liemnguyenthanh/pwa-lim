@@ -1,4 +1,5 @@
 import SmartAccount from "@/components/SmartAccount";
+import { useEthersSigner } from "@/hooks/useBiconomyAccount";
 import { getAuthToken, useIsLoggedIn } from "@dynamic-labs/sdk-react-core";
 import {
   Box,
@@ -33,17 +34,37 @@ export default function Home() {
   const [userJson, setUserJson] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+  const client = useEthersSigner({ chainId: 80084 });
+
+  const signMessage = async (signer: any) => {
+    const address = await signer.getAddress(); // Get the EOA wallet address
+    const smartAccount = "0x67FA1cFA8f931E54795a45C2BccbF83FA718227E";
+    const message = `${address} - ${smartAccount}`;
+    const signature = await signer.signMessage(message);
+
+    return {
+      message,
+      signature,
+      address,
+    };
+  };
 
   const sendDynamicTokenToSever = async () => {
     setLoading(true);
     try {
       const authToken = getAuthToken();
+      const { message, signature } = await signMessage(client);
+
       const response = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: authToken }),
+        body: JSON.stringify({
+          token: authToken,
+          message,
+          signature,
+        }),
       });
 
       if (!response.ok) {
@@ -89,7 +110,7 @@ export default function Home() {
       )}
       {loading && <CircularProgress size={24} />}
       {userJson && (
-        <Box maxHeight={500} overflow='auto' border={1} borderColor='grey'>
+        <Box maxHeight={500} overflow="auto" border={1} borderColor="grey">
           <JsonFormatter json={userJson} tabWith={4} jsonStyle={jsonStyle} />
         </Box>
       )}
